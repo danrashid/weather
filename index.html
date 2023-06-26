@@ -27,14 +27,22 @@
         const imgCount = 18;
         const imgs = [];
 
+        const show = (img) => {
+          img.style.visibility = "visible";
+        };
+
+        const hide = (img) => {
+          img.style.visibility = "hidden";
+        };
+
         for (let i = imgCount - 1; i >= 0; i -= 1) {
           const img = document.createElement("img");
           img.src = `/images/${latest - i}.gif`;
-          img.style.visibility = "hidden";
+          hide(img);
           imgs.push(img);
         }
 
-        imgs[0].style.visibility = "visible";
+        show(imgs[0]);
         document.body.append(...imgs);
 
         window.setInterval(() => {
@@ -43,11 +51,9 @@
           );
 
           if (currentIndex === imgs.length - 1) {
-            imgs.slice(1).forEach((img) => {
-              img.style.visibility = "hidden";
-            });
+            imgs.slice(1).forEach(hide);
           } else {
-            imgs[currentIndex + 1].style.visibility = "visible";
+            show(imgs[currentIndex + 1]);
           }
         }, 2000);
       }
