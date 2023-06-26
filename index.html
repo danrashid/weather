@@ -38,14 +38,18 @@
         document.body.append(...imgs);
 
         window.setInterval(() => {
-          const currentIndex = imgs.findIndex(
+          const currentIndex = imgs.findLastIndex(
             (img) => img.style.visibility === "visible"
           );
-          const nextIndex =
-            currentIndex === imgs.length - 1 ? 0 : currentIndex + 1;
 
-          imgs[nextIndex].style.visibility = "visible";
-          imgs[currentIndex].style.visibility = "hidden";
+          if (currentIndex === imgs.length - 1) {
+            imgs[0].style.visibility = "visible";
+            imgs.slice(1).forEach((img) => {
+              img.style.visibility = "hidden";
+            });
+          } else {
+            imgs[currentIndex + 1].style.visibility = "visible";
+          }
         }, 2000);
       }
     </script>
