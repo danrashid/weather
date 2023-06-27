@@ -21,40 +21,33 @@
   </head>
 
   <body>
+    <img id="weather" />
     <script>
       {
         const latest = Math.floor(Date.now() / (1000 * 60 * 20));
-        const imgCount = 18;
-        const imgs = [];
+        const imageCount = 18;
+        const img = document.getElementById("weather");
 
-        const show = (img) => {
-          img.style.visibility = "visible";
-        };
+        const images = Array(imageCount)
+          .fill("")
+          .map((_value, i) => {
+            const image = new Image();
+            image.src = `/images/${latest - i}.gif`;
+            return image;
+          })
+          .reverse();
 
-        const hide = (img) => {
-          img.style.visibility = "hidden";
-        };
-
-        for (let i = imgCount - 1; i >= 0; i -= 1) {
-          const img = document.createElement("img");
-          img.src = `/images/${latest - i}.gif`;
-          hide(img);
-          imgs.push(img);
-        }
-
-        show(imgs[0]);
-        document.body.append(...imgs);
+        img.src = images[0].src;
 
         window.setInterval(() => {
-          const currentIndex = imgs.findLastIndex(
-            (img) => img.style.visibility === "visible"
+          const currentIndex = images.findIndex(({ src }) =>
+            img.src.endsWith(src)
           );
 
-          if (currentIndex === imgs.length - 1) {
-            imgs.slice(1).forEach(hide);
-          } else {
-            show(imgs[currentIndex + 1]);
-          }
+          img.src =
+            currentIndex === images.length - 1
+              ? images[0].src
+              : images[currentIndex + 1].src;
         }, 2000);
       }
     </script>
