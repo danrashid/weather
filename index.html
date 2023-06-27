@@ -7,7 +7,6 @@
     <title>weather</title>
     <style>
       body {
-        background: black;
         margin: 0;
       }
     </style>
@@ -31,8 +30,6 @@
             const blob = await response.blob();
             bitmaps[i] = await window.createImageBitmap(blob);
           });
-
-          console.log(bitmaps);
 
           let index = -1;
           const render = () => {
