@@ -32,10 +32,9 @@
           .fill("")
           .map((_value, i) => {
             const image = new Image();
-            image.src = `/images/${latest - i}.gif`;
+            image.src = `/images/${latest - imageCount + 1 + i}.gif`;
             return image;
-          })
-          .reverse();
+          });
 
         let index = -1;
 
