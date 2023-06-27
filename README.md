@@ -4,4 +4,4 @@ Record the last 6 hours of [https://radar.weather.gov/ridge/standard/CONUS-LARGE
 
 ### /etc/cron.d/weather
 
-`0,20,40 * * * * root /home/pi/repos/weather/weather.sh /var/www/html/images/`
+`*/10 * * * * root /home/pi/repos/weather/weather.sh /var/www/html/images/`
