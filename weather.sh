@@ -18,6 +18,5 @@ do
 done
 
 ls -1tr "$destination"*.gif | head -n-90 | xargs rm -f
-ls -1tr $destination | grep gif > "$destination"manifest.txt
 
 exit 0

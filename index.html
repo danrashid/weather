@@ -20,7 +20,7 @@
         const ctx = canvas.getContext("2d");
 
         const load = async () => {
-          const response = await fetch("/images/manifest.txt");
+          const response = await fetch("/manifest.php");
           const manifest = await response.text();
           const filenames = manifest.trim().split("\n");
           const bitmaps = Array(filenames.length);
