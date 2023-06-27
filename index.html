@@ -10,39 +10,44 @@
         background: black;
         margin: 0;
       }
-      img {
-        width: 100%;
-        height: auto;
-      }
     </style>
   </head>
 
   <body>
-    <img id="weather" />
+    <canvas id="weather" width="3400" height="1600">Loading…</canvas>
     <script>
       {
-        const imageCount = 18;
-        const img = document.getElementById("weather");
-        const latest = Math.floor(Date.now() / (1000 * 60 * 20));
+        const canvas = document.getElementById("weather");
+        const ctx = canvas.getContext("2d");
 
-        const images = Array(imageCount)
-          .fill("")
-          .map((_value, i) => {
-            const image = new Image();
-            image.src = `/images/${latest - imageCount + 1 + i}.gif`;
-            return image;
+        const load = async () => {
+          const response = await fetch("/images/manifest.txt");
+          const manifest = await response.text();
+          const filenames = manifest.trim().split("\n");
+          const bitmaps = Array(filenames.length);
+
+          filenames.forEach(async (filename, i) => {
+            const response = await fetch(`/images/${filename}`);
+            const blob = await response.blob();
+            bitmaps[i] = await window.createImageBitmap(blob);
           });
 
-        let index = -1;
+          console.log(bitmaps);
 
-        const setImage = () => {
-          index = index === imageCount - 1 ? 0 : index + 1;
-          img.src = images[index].src;
+          let index = -1;
+          const render = () => {
+            index = index === filenames.length - 1 ? 0 : index + 1;
+            if (bitmaps[index] !== undefined) {
+              ctx.drawImage(bitmaps[index], 0, 0);
+            }
+          };
+
+          render();
+
+          window.setInterval(render, 200);
         };
 
-        setImage();
-
-        window.setInterval(setImage, 2000);
+        load();
       }
     </script>
   </body>
