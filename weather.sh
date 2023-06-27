@@ -6,12 +6,14 @@ destination=$1
 for i in {9..0}
 do
   url="https://radar.weather.gov/ridge/standard/CONUS-LARGE_$i.gif"
-  etag=$(curl -sI $url | grep etag | sed -E 's/.+"(.+)".+/\1/')
-  filepath="$destination$etag.gif"
+  last_modified=$(curl -sI $url | grep last-modified | sed -E 's/last-modified: (.+)/\1/')
+  hash=$(echo $last_modified | md5sum | awk '{print $1;}')
+  filepath="$destination$hash.gif"
 
   if [ ! -f $filepath ]
   then
     curl -s $url -o $filepath
+    touch -d "$last_modified" $filepath
   fi
 done
 
