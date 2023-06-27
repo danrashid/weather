@@ -11,9 +11,6 @@
         margin: 0;
       }
       img {
-        position: absolute;
-        top: 0;
-        left: 0;
         width: 100%;
         height: auto;
       }
@@ -24,9 +21,9 @@
     <img id="weather" />
     <script>
       {
-        const latest = Math.floor(Date.now() / (1000 * 60 * 20));
         const imageCount = 18;
         const img = document.getElementById("weather");
+        const latest = Math.floor(Date.now() / (1000 * 60 * 20));
 
         const images = Array(imageCount)
           .fill("")
