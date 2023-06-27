@@ -6,9 +6,6 @@ usort($filepaths, function($a, $b) {
 });
 
 header('Content-type: text/plain');
-
-foreach($filepaths as $filepath) {
-  echo basename($filepath) . "\n";
-}
+echo implode("\n", array_map('basename', $filepaths));
 
 ?>
