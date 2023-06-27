@@ -37,18 +37,16 @@
           })
           .reverse();
 
-        img.src = images[0].src;
+        let index = -1;
 
-        window.setInterval(() => {
-          const currentIndex = images.findIndex(({ src }) =>
-            img.src.endsWith(src)
-          );
+        const setImage = () => {
+          index = index === imageCount - 1 ? 0 : index + 1;
+          img.src = images[index].src;
+        };
 
-          img.src =
-            currentIndex === images.length - 1
-              ? images[0].src
-              : images[currentIndex + 1].src;
-        }, 2000);
+        setImage();
+
+        window.setInterval(setImage, 2000);
       }
     </script>
   </body>
