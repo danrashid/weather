@@ -4,4 +4,4 @@ Record the last _n_ hours of [https://radar.weather.gov/ridge/standard/CONUS-LAR
 
 ### Setup
 
-Most of these files need to be symlinked in place. And per `man cron`, weather_cron needs to be owned by root.
+Most of these files need to be symlinked in place. And per `man cron`, weather_cron needs to be owned by root:root.
