@@ -9,32 +9,60 @@
       body {
         margin: 0;
       }
+      #date {
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #00000080;
+        color: white;
+        padding: 0.25em 0;
+        border-radius: 0 0 0.25em 0;
+        text-align: center;
+        width: 32vmin;
+        font: 5vmin/8vmin sans-serif;
+        text-shadow: 1px 1px 1px #00000080;
+      }
+      canvas {
+        display: block;
+      }
     </style>
   </head>
 
   <body>
-    <canvas id="weather" width="3400" height="1600">Loading…</canvas>
+    <div id="date">Loading…</div>
+    <canvas id="weather" width="3400" height="1600"></canvas>
     <script>
       {
+        const date = document.getElementById("date");
         const canvas = document.getElementById("weather");
         const ctx = canvas.getContext("2d");
 
         const evtSource = new EventSource("/manifest.php");
         evtSource.addEventListener("refresh", (event) => {
           const filenames = JSON.parse(event.data);
-          const bitmaps = Array(filenames.length);
+          const images = Array(filenames.length);
 
           filenames.forEach(async (filename, i) => {
             const response = await fetch(`/images/${filename}.gif`);
             const blob = await response.blob();
-            bitmaps[i] = await window.createImageBitmap(blob);
+            const bitmap = await window.createImageBitmap(blob);
+
+            images[i] = {
+              bitmap,
+              date: new Date(
+                response.headers.get("Last-Modified")
+              ).toLocaleString(undefined, { timeStyle: "short" }),
+            };
           });
 
           let index = -1;
           const render = () => {
             index = index === filenames.length - 1 ? 0 : index + 1;
-            if (bitmaps[index] !== undefined) {
-              ctx.drawImage(bitmaps[index], 0, 0);
+            if (images[index] !== undefined) {
+              date.innerText = images[index].date;
+              ctx.drawImage(images[index].bitmap, 0, 0);
+              ctx.fillStyle = "#c2eaf0";
+              ctx.fillRect(40, 1350, 640, 150);
             }
           };
 
