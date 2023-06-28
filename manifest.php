@@ -1,6 +1,6 @@
 <?php
 
-$filepaths = glob('/var/www/html/images/*.gif');
+$filepaths = glob('./images/*.gif');
 usort($filepaths, function ($a, $b) {
   return filemtime($a) - filemtime($b);
 });
