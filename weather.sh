@@ -10,7 +10,7 @@ do
   hash=$(echo $last_modified | md5sum | awk '{print $1;}')
   filepath="$destination$hash.gif"
 
-  if [ ! -f $filepath ]
+  if [ ! -s $filepath ]
   then
     curl -s $url -o $filepath
     touch -d "$last_modified" $filepath
