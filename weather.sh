@@ -2,17 +2,18 @@
 set -e
 
 destination=$1
+tmp=/tmp/weather.gif
 
 for i in {9..0}
 do
   url="https://radar.weather.gov/ridge/standard/CONUS-LARGE_$i.gif"
-  last_modified=$(curl -sI $url | grep last-modified | sed -E 's/last-modified: (.+)/\1/')
-  hash=$(echo $last_modified | md5sum | awk '{print $1;}')
+  last_modified=$(curl -s -D /dev/stdout -o $tmp $url | grep last-modified | sed -E 's/last-modified: (.+)/\1/')
+  hash=$(md5sum $tmp | awk '{print $1;}')
   filepath="$destination$hash.gif"
 
   if [ ! -s $filepath ]
   then
-    curl -s $url -o $filepath
+    mv $tmp $filepath
     touch -d "$last_modified" $filepath
   fi
 done

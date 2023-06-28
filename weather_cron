@@ -1,1 +1,1 @@
-* * * * * root /home/pi/repos/weather/weather.sh /var/www/html/images/
+*/10 * * * * root /home/pi/repos/weather/weather.sh /var/www/html/images/
