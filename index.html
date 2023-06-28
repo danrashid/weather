@@ -26,7 +26,7 @@
           const bitmaps = Array(filenames.length);
 
           filenames.forEach(async (filename, i) => {
-            const response = await fetch(`/images/${filename}`);
+            const response = await fetch(`/images/${filename}.gif`);
             const blob = await response.blob();
             bitmaps[i] = await window.createImageBitmap(blob);
           });
