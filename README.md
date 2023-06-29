@@ -4,7 +4,11 @@ Record the last _n_ hours of [https://radar.weather.gov/ridge/standard/CONUS-LAR
 
 ### Setup
 
-Most of these files need to be symlinked in place. And per `man cron`, weather_cron needs to be owned by root:root.
+- `$ cp weather_cron_example weather_cron`
+- Adjust the contents of weather_cron as needed
+- `$ sudo chown root:root weather_cron`
+- `$ sudo ln -s weather_cron /etc/cron.d/`
+- Symlink the contents of ./public/ into place (e.g. /var/www/html/)
 
 ### Testing
 

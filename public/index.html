@@ -43,16 +43,20 @@
           const images = Array(filenames.length);
 
           filenames.forEach(async (filename, i) => {
-            const response = await fetch(`/images/${filename}.gif`);
-            const blob = await response.blob();
-            const bitmap = await window.createImageBitmap(blob);
+            try {
+              const response = await fetch(`/images/${filename}.gif`);
+              const blob = await response.blob();
+              const bitmap = await window.createImageBitmap(blob);
 
-            images[i] = {
-              bitmap,
-              date: new Date(
-                response.headers.get("Last-Modified")
-              ).toLocaleString(undefined, { timeStyle: "short" }),
-            };
+              images[i] = {
+                bitmap,
+                date: new Date(
+                  response.headers.get("Last-Modified")
+                ).toLocaleString(undefined, { timeStyle: "short" }),
+              };
+            } catch (error) {
+              console.error(error);
+            }
           });
 
           let index = -1;
