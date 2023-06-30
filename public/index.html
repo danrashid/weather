@@ -38,13 +38,14 @@
           .getElementById("weather")
           .getContext("2d");
 
-        let images = [];
+        const images = [];
+        let intervalID = -1;
 
         new EventSource("/manifest.php").addEventListener(
           "refresh",
           (event) => {
             const filenames = JSON.parse(event.data);
-            images = Array(filenames.length);
+            images.length = filenames.length;
 
             filenames.forEach(async (filename, index) => {
               try {
@@ -63,7 +64,9 @@
               }
             });
 
-            const render = async (index = 0) => {
+            let index = 0;
+
+            const render = async () => {
               const image = images[index];
 
               if (image !== undefined) {
@@ -75,12 +78,11 @@
                 canvasContext.fillRect(40, 1350, 640, 150);
               }
 
-              window.setTimeout(() => {
-                render(index === images.length - 1 ? 0 : index + 1);
-              }, 200);
+              index = index === images.length - 1 ? 0 : index + 1;
             };
 
-            render();
+            window.clearInterval(intervalID);
+            intervalID = window.setInterval(render, 200);
           }
         );
       }
