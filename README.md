@@ -7,7 +7,7 @@ Record the last _n_ hours of [https://radar.weather.gov/ridge/standard/CONUS-LAR
 - `$ cp weather_cron_example weather_cron`
 - Adjust the contents of weather_cron as needed
 - `$ sudo chown root:root weather_cron`
-- `$ sudo ln -s weather_cron /etc/cron.d/`
+- `$ sudo ln -s $(pwd)/weather_cron /etc/cron.d/`
 - Symlink the contents of ./public/ into place (e.g. /var/www/html/)
 
 ### Testing
