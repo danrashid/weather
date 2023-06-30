@@ -12,4 +12,4 @@ Record the last _n_ hours of [https://radar.weather.gov/ridge/standard/CONUS-LAR
 
 ### Testing
 
-`PHP_CLI_SERVER_WORKERS=2 php -S localhost:9000`
+`PHP_CLI_SERVER_WORKERS=2 php -S localhost:9000 -t ./public/`

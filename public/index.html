@@ -33,47 +33,54 @@
     <canvas id="weather" width="3400" height="1600"></canvas>
     <script>
       {
-        const date = document.getElementById("date");
-        const canvas = document.getElementById("weather");
-        const ctx = canvas.getContext("2d");
+        const dateEl = document.getElementById("date");
+        const canvasContext = document
+          .getElementById("weather")
+          .getContext("2d");
 
-        const evtSource = new EventSource("/manifest.php");
-        evtSource.addEventListener("refresh", (event) => {
-          const filenames = JSON.parse(event.data);
-          const images = Array(filenames.length);
+        new EventSource("/manifest.php").addEventListener(
+          "refresh",
+          (event) => {
+            const filenames = JSON.parse(event.data);
+            const images = Array(filenames.length);
 
-          filenames.forEach(async (filename, i) => {
-            try {
-              const response = await fetch(`/images/${filename}.gif`);
-              const blob = await response.blob();
-              const bitmap = await window.createImageBitmap(blob);
-
-              images[i] = {
-                bitmap,
-                date: new Date(
+            filenames.forEach(async (filename, index) => {
+              try {
+                const response = await fetch(`/images/${filename}.gif`);
+                const blob = await response.blob();
+                const date = new Date(
                   response.headers.get("Last-Modified")
-                ).toLocaleString(undefined, { timeStyle: "short" }),
-              };
-            } catch (error) {
-              console.error(error);
-            }
-          });
+                ).toLocaleString(undefined, { timeStyle: "short" });
 
-          let index = -1;
-          const render = () => {
-            index = index === filenames.length - 1 ? 0 : index + 1;
-            if (images[index] !== undefined) {
-              date.innerText = images[index].date;
-              ctx.drawImage(images[index].bitmap, 0, 0);
-              ctx.fillStyle = "#c2eaf0";
-              ctx.fillRect(40, 1350, 640, 150);
-            }
-          };
+                images[index] = {
+                  blob,
+                  date,
+                };
+              } catch (error) {
+                console.error(error);
+              }
+            });
 
-          render();
+            const render = async (index = 0) => {
+              const image = images[index];
 
-          window.setInterval(render, 200);
-        });
+              if (image !== undefined) {
+                const bitmap = await window.createImageBitmap(image.blob);
+
+                dateEl.innerText = image.date;
+                canvasContext.drawImage(bitmap, 0, 0);
+                canvasContext.fillStyle = "#c2eaf0";
+                canvasContext.fillRect(40, 1350, 640, 150);
+              }
+
+              window.setTimeout(() => {
+                render(index === images.length - 1 ? 0 : index + 1);
+              }, 200);
+            };
+
+            render();
+          }
+        );
       }
     </script>
   </body>
