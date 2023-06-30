@@ -38,11 +38,13 @@
           .getElementById("weather")
           .getContext("2d");
 
+        let images = [];
+
         new EventSource("/manifest.php").addEventListener(
           "refresh",
           (event) => {
             const filenames = JSON.parse(event.data);
-            const images = Array(filenames.length);
+            images = Array(filenames.length);
 
             filenames.forEach(async (filename, index) => {
               try {
