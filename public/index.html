@@ -102,10 +102,12 @@
         window.addEventListener("scroll", (event) => {
           window.clearTimeout(timeoutID);
           timeoutID = window.setTimeout(() => {
-            window.location.hash = [
-              window.innerWidth / 2 + window.scrollX,
-              window.innerHeight / 2 + window.scrollY,
-            ].map(Math.round);
+            window.location.replace(
+              `#${[
+                window.innerWidth / 2 + window.scrollX,
+                window.innerHeight / 2 + window.scrollY,
+              ].map(Math.round)}`
+            );
           }, 500);
         });
       }
