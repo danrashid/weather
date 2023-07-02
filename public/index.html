@@ -8,19 +8,27 @@
     <style>
       body {
         margin: 0;
+        font-family: sans-serif;
+        color: white;
+      }
+      .controls {
+        position: fixed;
+        width: 100%;
+        background: #00000080;
+        display: flex;
+        font-size: 2rem;
+      }
+      #date,
+      #slider {
+        padding: 2rem;
       }
       #date {
-        position: fixed;
-        top: 0;
-        left: 0;
-        background: #00000080;
-        color: white;
-        padding: 0.25em 0.5em;
-        border-radius: 0 0 0.25em 0;
         text-align: center;
-        width: 6em;
-        font: 5vmin/8vmin sans-serif;
-        text-shadow: 1px 1px 1px #00000080;
+        min-width: 6em;
+      }
+      #slider {
+        flex: 1;
+        margin: 0 4rem 0 2rem;
       }
       canvas {
         display: block;
@@ -29,23 +37,45 @@
   </head>
 
   <body>
-    <div id="date">Loading…</div>
+    <div class="controls">
+      <div id="date">Loading…</div>
+      <input id="slider" type="range" min="0" value="0" />
+    </div>
     <canvas id="weather" width="3400" height="1600"></canvas>
     <script>
       {
         const dateEl = document.getElementById("date");
+        const sliderEl = document.getElementById("slider");
         const canvasContext = document
           .getElementById("weather")
           .getContext("2d");
 
         const images = [];
         let intervalID = -1;
+        let imageIndex = 0;
+
+        const render = async () => {
+          const image = images[imageIndex];
+          sliderEl.value = imageIndex;
+
+          if (image !== undefined) {
+            const bitmap = await window.createImageBitmap(image.blob);
+
+            dateEl.innerText = image.date;
+            canvasContext.drawImage(bitmap, 0, 0);
+            canvasContext.fillStyle = "#c2eaf0";
+            canvasContext.fillRect(40, 1350, 640, 150);
+          }
+
+          imageIndex = imageIndex === images.length - 1 ? 0 : imageIndex + 1;
+        };
 
         new EventSource("/manifest.php").addEventListener(
           "refresh",
           (event) => {
             const filenames = JSON.parse(event.data);
             images.length = filenames.length;
+            sliderEl.max = filenames.length - 1;
 
             filenames.forEach(async (filename, index) => {
               try {
@@ -63,23 +93,6 @@
                 console.error(error);
               }
             });
-
-            let index = 0;
-
-            const render = async () => {
-              const image = images[index];
-
-              if (image !== undefined) {
-                const bitmap = await window.createImageBitmap(image.blob);
-
-                dateEl.innerText = image.date;
-                canvasContext.drawImage(bitmap, 0, 0);
-                canvasContext.fillStyle = "#c2eaf0";
-                canvasContext.fillRect(40, 1350, 640, 150);
-              }
-
-              index = index === images.length - 1 ? 0 : index + 1;
-            };
 
             window.clearInterval(intervalID);
             intervalID = window.setInterval(render, 200);
@@ -109,6 +122,20 @@
               ].map(Math.round)}`
             );
           }, 500);
+        });
+
+        sliderEl.addEventListener("input", (event) => {
+          window.clearInterval(intervalID);
+          imageIndex = Number(event.target.value);
+          render();
+        });
+
+        sliderEl.addEventListener("change", (event) => {
+          imageIndex = Number(event.target.value);
+          render();
+          window.setTimeout(() => {
+            intervalID = window.setInterval(render, 200);
+          }, 2000);
         });
       }
     </script>
