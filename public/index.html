@@ -9,26 +9,26 @@
       body {
         margin: 0;
         font-family: sans-serif;
-        color: white;
       }
       .controls {
         position: fixed;
-        width: 100%;
+        bottom: 0;
+        width: 100dvw;
         background: #00000080;
+        color: white;
         display: flex;
-        font-size: 2rem;
-      }
-      #date,
-      #slider {
-        padding: 2rem;
+        align-items: center;
+        padding-bottom: 1rem;
       }
       #date {
         text-align: center;
         min-width: 6em;
+        white-space: nowrap;
       }
       #slider {
         flex: 1;
-        margin: 0 4rem 0 2rem;
+        margin: 0 2rem 0 0;
+        height: 4rem;
       }
       canvas {
         display: block;
