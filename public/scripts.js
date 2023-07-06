@@ -53,12 +53,13 @@ new EventSource("/manifest.php").addEventListener("refresh", (event) => {
   });
 
   window.clearInterval(intervalID);
-  intervalID = window.setInterval(render, 200);
+  intervalID = window.setInterval(() => {
+    window.requestAnimationFrame(render);
+  }, 100);
 });
 
 if (window.location.hash) {
   const [x, y] = window.location.hash.replace(/^#/, "").split(",").map(Number);
-
   window.scrollTo(x - window.innerWidth / 2, y - window.innerHeight / 2);
 }
 

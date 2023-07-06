@@ -13,7 +13,7 @@ body {
 }
 #date {
   text-align: center;
-  min-width: 7em;
+  padding: 0 1rem;
   white-space: nowrap;
 }
 #progress {
