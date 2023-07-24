@@ -19,7 +19,7 @@ body {
 #progress {
   flex: 1;
   margin-right: 2rem;
-  height: 2rem;
+  padding: .5rem 0;
 }
 canvas {
   display: block;
