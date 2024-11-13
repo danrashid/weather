@@ -9,6 +9,7 @@ Cache the last 3 hours of [https://radar.weather.gov/ridge/standard/CONUS-LARGE_
 - `$ sudo chown root:root weather_cron`
 - `$ sudo ln -s $(pwd)/weather_cron /etc/cron.d/`
 - Symlink the contents of ./public/ into place (e.g. /var/www/html/)
+- Make sure your HTTP server has streaming support enabled
 
 ### Testing
 
