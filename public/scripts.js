@@ -53,9 +53,7 @@ new EventSource("/manifest.php").addEventListener("refresh", (event) => {
   });
 
   window.clearInterval(intervalID);
-  intervalID = window.setInterval(() => {
-    window.requestAnimationFrame(render);
-  }, 100);
+  intervalID = window.setInterval(render, 100);
 });
 
 if (window.location.hash) {
