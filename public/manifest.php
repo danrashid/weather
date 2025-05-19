@@ -31,5 +31,5 @@ while (true) {
 
   if (connection_aborted()) break;
 
-  sleep(60);
+  sleep(1);
 }
