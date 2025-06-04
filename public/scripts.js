@@ -37,11 +37,11 @@ new EventSource("/manifest.php").addEventListener("refresh", (event) => {
   images.length = filenames.length;
   progressEl.max = filenames.length - 1;
 
-  filenames.forEach(async (filename, index) => {
+  filenames.forEach(async ([filename, filemtime], index) => {
     try {
       const response = await fetch(`/images/${filename}.gif`);
       const blob = await response.blob();
-      const date = new Date(response.headers.get("Last-Modified")).valueOf();
+      const date = filemtime * 1000;
 
       images[index] = {
         blob,

@@ -12,7 +12,7 @@ while (true) {
   });
 
   $try_data = array_map(function ($filepath) {
-    return basename($filepath, '.gif');
+    return [basename($filepath, '.gif'), filemtime($filepath)];
   }, $filenames);
 
   if ($data !== $try_data) {

@@ -13,4 +13,6 @@ Cache the last 3 hours of [https://radar.weather.gov/ridge/standard/CONUS-LARGE_
 
 ### Testing
 
-`PHP_CLI_SERVER_WORKERS=2 php -S localhost:9000 -t ./public/`
+- `sudo apt install php-cli` if necessary
+- Create `./public/images` and copy GIFs into it. Use `scp -rp` to preserve file modification times.
+- `PHP_CLI_SERVER_WORKERS=2 php -S 0.0.0.0:9000 -t ./public/`
