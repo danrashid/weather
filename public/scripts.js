@@ -1,59 +1,45 @@
-const dateEl = document.getElementById("date");
+const countdownEl = document.getElementById("countdown");
 const progressEl = document.getElementById("progress");
-const canvasContext = document.getElementById("weather").getContext("2d");
+const weatherEl = document.getElementById("weather");
 
-const images = [];
-let intervalID = -1;
-let imageIndex = 0;
+let renderIntervalId = -1;
+let scrollTimeoutId = -1;
 
-const MINUTE = 1000 * 60;
-const HOUR = MINUTE * 60;
+const renderCountdown = (filemtime) => {
+  const MINUTE = 1000 * 60;
+  const HOUR = MINUTE * 60;
 
-const render = async () => {
-  const image = images[imageIndex];
-  progressEl.value = imageIndex;
+  const milliseconds = Date.now() - filemtime * 1000;
+  const hours = Math.floor(milliseconds / HOUR);
+  const minutes = Math.floor((milliseconds - hours * HOUR) / MINUTE).toString();
 
-  if (image !== undefined) {
-    const bitmap = await window.createImageBitmap(image.blob);
-    const milliseconds = Date.now() - image.date;
-    const hours = Math.floor(milliseconds / HOUR);
-    const minutes = Math.floor(
-      (milliseconds - hours * HOUR) / MINUTE
-    ).toString();
+  countdownEl.innerText = `T-${hours}h:${minutes.toString().padStart(2, 0)}m`;
+};
 
-    dateEl.innerText = `T-${hours}h:${
-      minutes.length === 1 ? "0" : ""
-    }${minutes}m`;
-    canvasContext.drawImage(bitmap, 0, 0);
-    canvasContext.fillStyle = "#c2eaf0";
-    canvasContext.fillRect(40, 1350, 640, 150);
-  }
+const render = (images) => {
+  let index = 0;
 
-  imageIndex = imageIndex === images.length - 1 ? 0 : imageIndex + 1;
+  return async () => {
+    const { src, filemtime } = images[index];
+
+    weatherEl.src = await src;
+    renderCountdown(filemtime);
+    progressEl.value = index;
+    index = index === images.length - 1 ? 0 : index + 1;
+  };
 };
 
 new EventSource("/manifest.php").addEventListener("refresh", (event) => {
-  const filenames = JSON.parse(event.data);
-  images.length = filenames.length;
-  progressEl.max = filenames.length - 1;
+  const images = JSON.parse(event.data).map(([filename, filemtime]) => ({
+    src: fetch(`/images/${filename}.gif`)
+      .then((response) => response.blob())
+      .then((blob) => URL.createObjectURL(blob)),
+    filemtime,
+  }));
 
-  filenames.forEach(async ([filename, filemtime], index) => {
-    try {
-      const response = await fetch(`/images/${filename}.gif`);
-      const blob = await response.blob();
-      const date = filemtime * 1000;
-
-      images[index] = {
-        blob,
-        date,
-      };
-    } catch (error) {
-      console.error(error);
-    }
-  });
-
-  window.clearInterval(intervalID);
-  intervalID = window.setInterval(render, 100);
+  progressEl.max = images.length - 1;
+  window.clearInterval(renderIntervalId);
+  renderIntervalId = window.setInterval(render(images), 100);
 });
 
 if (window.location.hash) {
@@ -61,15 +47,16 @@ if (window.location.hash) {
   window.scrollTo(x - window.innerWidth / 2, y - window.innerHeight / 2);
 }
 
-let timeoutID = -1;
-window.addEventListener("scroll", (event) => {
-  window.clearTimeout(timeoutID);
-  timeoutID = window.setTimeout(() => {
-    window.location.replace(
-      `#${[
-        window.innerWidth / 2 + window.scrollX,
-        window.innerHeight / 2 + window.scrollY,
-      ].map(Math.round)}`
-    );
-  }, 500);
+const handlScroll = () => {
+  window.location.replace(
+    `#${[
+      window.innerWidth / 2 + window.scrollX,
+      window.innerHeight / 2 + window.scrollY,
+    ].map(Math.round)}`
+  );
+};
+
+window.addEventListener("scroll", () => {
+  window.clearTimeout(scrollTimeoutId);
+  scrollTimeoutId = window.setTimeout(handlScroll, 500);
 });

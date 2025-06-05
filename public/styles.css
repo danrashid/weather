@@ -11,7 +11,7 @@ body {
   display: flex;
   align-items: center;
 }
-#date {
+#countdown {
   text-align: center;
   padding: 0 1rem;
   white-space: nowrap;
@@ -19,8 +19,10 @@ body {
 #progress {
   flex: 1;
   margin-right: 2rem;
-  padding: .5rem 0;
+  padding: 0.5rem 0;
 }
-canvas {
+#weather {
   display: block;
+  width: 3400px;
+  height: 1600px;
 }
