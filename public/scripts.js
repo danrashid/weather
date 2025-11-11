@@ -29,7 +29,9 @@ const render = (images) => {
   };
 };
 
-new EventSource("/manifest.php").addEventListener("refresh", (event) => {
+const eventSource = new EventSource("/manifest.php");
+
+eventSource.addEventListener("refresh", (event) => {
   const images = JSON.parse(event.data).map(([filename, filemtime]) => ({
     src: fetch(`/images/${filename}.gif`)
       .then((response) => response.blob())
@@ -59,4 +61,8 @@ const handlScroll = () => {
 window.addEventListener("scroll", () => {
   window.clearTimeout(scrollTimeoutId);
   scrollTimeoutId = window.setTimeout(handlScroll, 500);
+});
+
+window.addEventListener("beforeunload", () => {
+  eventSource.close();
 });
